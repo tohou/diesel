@@ -8,7 +8,7 @@ pub use diesel::types::{NativeSqlType, ToSql, Nullable, Array};
 
 pub fn test_type_round_trips<ST, T>(value: T, type_name: &str) -> bool where
     ST: NativeSqlType,
-    T: ToSql<ST> + Queriable<ST> + PartialEq,
+    T: ToSql<ST> + Queriable<ST> + PartialEq + ::std::fmt::Debug,
 {
     let connection = connection();
     let query = format!("SELECT $1::{}", type_name);
