@@ -14,7 +14,15 @@ pub fn test_type_round_trips<ST, T>(value: T, type_name: &str) -> bool where
     let query = format!("SELECT $1::{}", type_name);
     let result = connection.query_sql_params::<ST, T, ST, T>(&query, &value);
     match result {
-        Ok(mut val) => value == val.nth(0).unwrap(),
+        Ok(mut val) => {
+            let res = val.nth(0).unwrap();
+            if value != res {
+                println!("{:?}, {:?}", value, res);
+                false
+            } else {
+                true
+            }
+        }
         Err(Error::DatabaseError(msg)) =>
             &msg == "ERROR:  invalid byte sequence for encoding \"UTF8\": 0x00\n",
         Err(e) => panic!("Query failed: {:?}", e),
